@@ -1,0 +1,65 @@
+version: '3.5'
+
+services:
+    prestashop:
+        build: prestashop
+        environment:
+            PS_DOMAIN: "localhost:8081"
+            DB_SERVER: db
+            DB_PORT: "3306"
+            DB_USER: prestashop
+            DB_PASSWORD: prestashop
+            DB_NAME: prestashop
+            DB_CLEAR: '0'
+            DB_CREATE: '1'
+            DB_PREFIX: "ps_"
+            PS_DIR_INSTALL: install1234
+            PS_DIR_ADMIN: admin1234
+            PS_LANGUAGE: it
+            PS_TIMEZONE: "Europe/Rome"
+            PS_SHOP_NAME: "test shop"
+            PS_SHOP_COUNTRY: it
+            PS_FIRSTNAME: John
+            PS_LASTNAME: Doe
+            PS_PASSWORD: testshop123
+            PS_EMAIL: "jdoe@foo.bar"
+            PS_NEWSLETTER: '0'
+            PS_SSL: '0'
+            PHP_MEMORY_LIMIT: 256M
+            PHP_MAX_EXECUTION_TIME: "200"
+            PHP_MAX_INPUT_TIME: "60"
+        expose:
+            - "9000"
+        volumes:
+            - app:/app
+        depends_on:
+            - db
+        restart: unless-stopped
+    web:
+        build: web
+        environment:
+            PS_DOMAIN: "localhost:8081"
+            PS_DIR_INSTALL: install1234
+            PS_DIR_ADMIN: admin1234
+        ports:
+            - "8081:80"
+            # - "443:443"
+        volumes:
+            - app:/app:ro
+        depends_on:
+            - prestashop
+        restart: unless-stopped
+    db:
+        image: mariadb:latest
+        environment:
+            MYSQL_ROOT_PASSWORD: supercow
+            MYSQL_DATABASE: prestashop
+            MYSQL_USER: prestashop
+            MYSQL_PASSWORD: prestashop
+        volumes:
+            - ./db/config:/etc/mysql/conf.d
+            - db-data:/var/lib/mysql
+        restart: unless-stopped
+volumes:
+    app:
+    db-data:
