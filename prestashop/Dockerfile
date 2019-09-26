@@ -1,4 +1,4 @@
-FROM alpine:3.9 as get-prestashop
+FROM alpine:latest as get-prestashop
 
 RUN apk --no-cache add wget
 RUN mkdir /tmp/app /tmp/download && \
@@ -7,7 +7,7 @@ RUN mkdir /tmp/app /tmp/download && \
     unzip -q prestashop_1.7.5.1.zip -d . && \
     unzip -q prestashop.zip -d /tmp/app
 
-FROM alpine:3.9
+FROM alpine:latest
 
 RUN apk --no-cache add \
     bash \
