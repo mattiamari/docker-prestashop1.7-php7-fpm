@@ -27,8 +27,8 @@ fi
 
 echo "* waiting for sql server to ready up..."
 SQL_S=1
-while [ $SQL_S -ne 0]; do
-  mysql -h "$DB_SERVER" -P $DB_PORT -u "$DB_USER" -p "$DB_PASSWORD" -e "status" > /dev/null 2>&1
+while [ $SQL_S -ne 0 ]; do
+  mysql -h "$DB_SERVER" -P $DB_PORT -u "$DB_USER" -p"$DB_PASSWORD" -e "show status" > /dev/null 2>&1
   SQL_S=$?
   echo -n ". "
   sleep 1
